@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Foundation Strength - Week 1</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: #252540;
+            --accent: #00d9ff;
+            --accent-dim: rgba(0, 217, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --warmup: #ff9800;
+            --cooldown: #9c27b0;
+            --weight: #ffc107;
+            --rest: #4caf50;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            font-size: 16px;
+            line-height: 1.5;
+            padding-bottom: 100px;
+        }
+
+        header {
+            background: var(--bg-secondary);
+            padding: 20px 16px 16px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .day-selector {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .day-btn {
+            flex: 1;
+            padding: 14px 8px;
+            border: 2px solid var(--accent);
+            background: transparent;
+            color: var(--accent);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .day-btn.active {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        main {
+            padding: 16px;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .section-header.warmup {
+            border-color: var(--warmup);
+        }
+
+        .section-header.cooldown {
+            border-color: var(--cooldown);
+        }
+
+        .section-icon {
+            font-size: 1.25rem;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .exercise {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .exercise.warmup {
+            border-left-color: var(--warmup);
+        }
+
+        .exercise.cooldown {
+            border-left-color: var(--cooldown);
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .block-label {
+            background: var(--accent);
+            color: var(--bg-primary);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .exercise.warmup .block-label {
+            background: var(--warmup);
+        }
+
+        .exercise.cooldown .block-label {
+            background: var(--cooldown);
+        }
+
+        .exercise-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .exercise-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .badge-sets {
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+
+        .badge-weight {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--weight);
+        }
+
+        .badge-rest {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--rest);
+        }
+
+        .exercise-notes {
+            margin-top: 10px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .video-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 10px 16px;
+            background: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .video-btn:active {
+            background: #cc0000;
+        }
+
+        .video-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .no-exercises {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .equipment-summary {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .equipment-title {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .equipment-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .equipment-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .equipment-icon {
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 380px) {
+            .day-btn {
+                padding: 12px 4px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Foundation Strength</h1>
+        <p class="subtitle">Week 1 - Jay</p>
+    </header>
+
+    <nav class="day-selector">
+        <button class="day-btn active" data-day="1">Day 1</button>
+        <button class="day-btn" data-day="2">Day 2</button>
+        <button class="day-btn" data-day="3">Day 3</button>
+    </nav>
+
+    <main id="content"></main>
+
+    <script>
+        // ============================================
+        // WORKOUT DATA - Edit links below as needed
+        // ============================================
+        const workoutData = {
+            1: {
+                equipment: [
+                    { name: "Lacrosse Ball", icon: "🎾" },
+                    { name: "Kettlebell (75 lbs)", icon: "🏋️" },
+                    { name: "Cable Machine / Band", icon: "🔗" },
+                    { name: "Dumbbells (20 lbs)", icon: "🏋️" },
+                    { name: "Incline Bench", icon: "🪑" },
+                    { name: "Step / Box", icon: "📦" },
+                    { name: "Sliders", icon: "🛷" }
+                ],
+                warmup: [
+                    { name: "Pec Self-Myofascial Release w/ Lacrosse Ball", duration: "60-90s each", link: "https://www.youtube.com/shorts/1rHiAMy6Jxg" },
+                    { name: "Lat Self-Myofascial Release w/ Lacrosse Ball", duration: "60-90s", link: "https://www.youtube.com/shorts/d6Mn4wFIros" },
+                    { name: "Active Pec Doorway Stretch", setsReps: "2 x 30s", link: "https://www.youtube.com/shorts/lbiXod5Zx8U" },
+                    { name: "Rusin Shoulder Tri-Set", setsReps: "3 x 15 each", link: "https://www.youtube.com/watch?v=0bCp7Cbdt2I" }
+                ],
+                main: [
+                    { block: "A1", name: "Kettlebell RDL", load: "75 lbs", setsReps: "5 x 8", rest: "0s", notes: "RPE 7-8", link: "https://www.youtube.com/watch?v=iFSSNnRhmxo" },
+                    { block: "A2", name: "Half-Kneeling Pallof ISO", load: "17.5 lbs", setsReps: "5 x 20s", rest: "90s", link: "https://www.youtube.com/watch?v=LpBNsIv2olo" },
+                    { block: "B1", name: "Front-Foot Elevated Split Squat", load: "20 lbs/side", setsReps: "3 x 6/side", rest: "0s", notes: "3s descent, 1s pause", link: "https://www.youtube.com/watch?v=oCi209N3nVk" },
+                    { block: "B2", name: "Chest-Supported Row", setsReps: "3 x 8", rest: "90s", notes: "1s squeeze at top", link: "https://www.youtube.com/shorts/woHK8Lws2xM" },
+                    { block: "C1", name: "Hamstring Slider Curl", setsReps: "3 x 8", rest: "0s", link: "https://www.youtube.com/shorts/lLUniqm00KM" },
+                    { block: "C2", name: "Soleus Raise (Bent Knee)", setsReps: "3 x 12", rest: "0s", link: "https://www.youtube.com/shorts/3nMGtvkaf6Q" },
+                    { block: "C3", name: "Deadbug w/ Pelvic Tuck Focus", setsReps: "3 x 30s", rest: "90s", link: "https://www.youtube.com/watch?v=HU9SvpA52BE" }
+                ],
+                cooldown: [
+                    { name: "Box Breathing", duration: "2 minutes", link: "https://www.youtube.com/watch?v=a7uQXDkxEtM" }
+                ]
+            },
+            2: {
+                equipment: [
+                    { name: "Resistance Band", icon: "🔗" },
+                    { name: "Medicine Ball", icon: "🏀" },
+                    { name: "Kettlebell / Dumbbell", icon: "🏋️" },
+                    { name: "Cable Machine", icon: "🔗" }
+                ],
+                warmup: [
+                    { name: "Short Foot Activation + Tripod", duration: "2-3 min", link: "https://www.youtube.com/shorts/D9qjQWqVIlI" },
+                    { name: "Ankle Circles", setsReps: "10 each direction", link: "https://www.youtube.com/watch?v=mzTQGYGI0Ng" },
+                    { name: "Hip Hinge Patterning (butt taps)", setsReps: "2 x 8", link: "https://www.youtube.com/watch?v=t7wX-reMGkc" },
+                    { name: "Rusin Shoulder Tri-Set", setsReps: "3 x 15 each", link: "https://www.youtube.com/watch?v=0bCp7Cbdt2I" }
+                ],
+                main: [
+                    { block: "A1", name: "Med Ball Slam (or KB High Pull)", setsReps: "6 x 3", rest: "30s", link: "https://www.youtube.com/shorts/cgKqNn90MEo" },
+                    { block: "B1", name: "Goblet Squat", setsReps: "4 x 8", rest: "0s", notes: "2s descent, 1s pause", link: "https://www.youtube.com/shorts/7-80HiXX1K8" },
+                    { block: "B2", name: "1-Arm Cable Row (Half-Kneeling)", setsReps: "4 x 8", rest: "90s", link: "https://www.youtube.com/watch?v=afE9JabFqR4" },
+                    { block: "C1", name: "Single-Leg RDL (Contralateral)", setsReps: "3 x 8/side", rest: "0s", link: "https://www.youtube.com/shorts/OJ2wlRMVn5g" },
+                    { block: "C2", name: "Push-Up Plus", setsReps: "3 x 8-12", rest: "90s", link: "https://www.youtube.com/watch?v=I2MM3UBAlU4" },
+                    { block: "D1", name: "Suitcase Carry", setsReps: "3 x 30-40s/side", rest: "0s", link: "https://www.youtube.com/shorts/Z2cbmdxY1cY" },
+                    { block: "D2", name: "Side Plank", setsReps: "3 x 45s/side", rest: "90s", link: "https://www.youtube.com/shorts/hVhJ1Ms27lI" }
+                ],
+                cooldown: [
+                    { name: "Box Breathing", duration: "30s each side", link: "https://www.youtube.com/watch?v=a7uQXDkxEtM" }
+                ]
+            },
+            3: {
+                equipment: [
+                    { name: "Foam Roller", icon: "🧻" },
+                    { name: "Balance Board", icon: "🛹" },
+                    { name: "Kettlebell / Dumbbell", icon: "🏋️" },
+                    { name: "Landmine + Barbell", icon: "🏋️" },
+                    { name: "Step / Box", icon: "📦" },
+                    { name: "Resistance Band", icon: "🔗" }
+                ],
+                warmup: [
+                    { name: "Wall Slides", setsReps: "3 sets", link: "https://www.youtube.com/watch?v=tWDGEyMWv10" },
+                    { name: "Y-T-W", setsReps: "12 reps", link: "https://www.youtube.com/shorts/tlcuHSz1TQE" },
+                    { name: "Thoracic Foam-Roll + Rotation", setsReps: "6 each side", link: "https://www.youtube.com/shorts/mDfgFJDJcRw" },
+                    { name: "Balance Board", setsReps: "3 x 30s each", link: "https://www.youtube.com/watch?v=0bCp7Cbdt2I" }
+                ],
+                main: [
+                    { block: "A1", name: "Goblet Squat", load: "20/30/35 lbs", setsReps: "2 x 10", link: "https://www.youtube.com/shorts/7-80HiXX1K8" },
+                    { block: "A2", name: "Half-Kneeling Landmine Press", setsReps: "2 x 10/side", link: "https://www.youtube.com/watch?v=fx6lSVNvu-4" },
+                    { block: "A3", name: "Step-Down (Slow)", setsReps: "2 x 10/side", link: "https://www.youtube.com/shorts/cFIzLNnudTY" },
+                    { block: "A4", name: "Deadbug w/ Pelvic Tuck Focus", setsReps: "2 x 5/side", link: "https://www.youtube.com/watch?v=HU9SvpA52BE" },
+                    { block: "C1", name: "Front Rack Carry", setsReps: "2 x 25-35s", rest: "0s", link: "https://www.youtube.com/watch?v=zKHog8SWdM4" },
+                    { block: "C2", name: "Farmer Carry", setsReps: "2 x 25-35s", rest: "0s", link: "https://www.youtube.com/shorts/tJSn11z6EyQ" },
+                    { block: "C3", name: "Suitcase Carry", setsReps: "2 x 25-35s", rest: "90s", link: "https://www.youtube.com/shorts/Z2cbmdxY1cY" },
+                    { block: "D1", name: "Band External Rotation", setsReps: "2 x 12/side", rest: "0s", link: "https://www.youtube.com/shorts/7DqYesMRkzU" },
+                    { block: "D2", name: "Band Face Pull", setsReps: "2 x 12", rest: "0s", link: "https://www.youtube.com/shorts/1s-0WtJMsu8" },
+                    { block: "D3", name: "Tibialis Raises", setsReps: "2 x 15", rest: "0s", link: "https://www.youtube.com/shorts/pQcvW08rnAk" },
+                    { block: "D4", name: "Calf ISO Hold", setsReps: "2 x 20s/side", rest: "90s", link: "https://www.youtube.com/shorts/I2_usIKWEfE" }
+                ],
+                cooldown: [
+                    { name: "Box Breathing", duration: "30s each side", link: "https://www.youtube.com/watch?v=a7uQXDkxEtM" }
+                ]
+            }
+        };
+
+        // Current day
+        let currentDay = 1;
+
+        // YouTube play icon SVG
+        const playIcon = `<svg viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>`;
+
+        // Render exercise card
+        function renderExercise(exercise, type) {
+            const typeClass = type;
+            const hasVideo = !!exercise.link;
+
+            let details = '';
+            if (exercise.setsReps) {
+                details += `<span class="badge badge-sets">${exercise.setsReps}</span>`;
+            }
+            if (exercise.duration) {
+                details += `<span class="badge badge-sets">${exercise.duration}</span>`;
+            }
+            if (exercise.load) {
+                details += `<span class="badge badge-weight">${exercise.load}</span>`;
+            }
+            if (exercise.rest && exercise.rest !== "0s") {
+                details += `<span class="badge badge-rest">Rest ${exercise.rest}</span>`;
+            }
+
+            const videoBtn = hasVideo
+                ? `<a href="${exercise.link}" target="_blank" class="video-btn" onclick="event.stopPropagation();">${playIcon} Watch Video</a>`
+                : '';
+
+            return `
+                <div class="exercise ${typeClass}">
+                    <div class="exercise-header">
+                        ${exercise.block ? `<span class="block-label">${exercise.block}</span>` : ''}
+                        <span class="exercise-name">${exercise.name}</span>
+                    </div>
+                    ${details ? `<div class="exercise-details">${details}</div>` : ''}
+                    ${exercise.notes ? `<div class="exercise-notes">${exercise.notes}</div>` : ''}
+                    ${videoBtn}
+                </div>
+            `;
+        }
+
+        // Render section
+        function renderSection(title, icon, exercises, type) {
+            if (!exercises || exercises.length === 0) return '';
+
+            return `
+                <section class="section">
+                    <div class="section-header ${type}">
+                        <span class="section-icon">${icon}</span>
+                        <h2 class="section-title">${title}</h2>
+                    </div>
+                    ${exercises.map((ex) => renderExercise(ex, type)).join('')}
+                </section>
+            `;
+        }
+
+        // Render equipment summary
+        function renderEquipment(equipment) {
+            if (!equipment || equipment.length === 0) return '';
+
+            const items = equipment.map(eq =>
+                `<span class="equipment-item"><span class="equipment-icon">${eq.icon}</span>${eq.name}</span>`
+            ).join('');
+
+            return `
+                <div class="equipment-summary">
+                    <div class="equipment-title">Equipment Needed</div>
+                    <div class="equipment-list">${items}</div>
+                </div>
+            `;
+        }
+
+        // Render day
+        function renderDay(day) {
+            const data = workoutData[day];
+            if (!data) {
+                return '<div class="no-exercises">No data for this day</div>';
+            }
+
+            let html = '';
+            html += renderEquipment(data.equipment);
+            html += renderSection('Warm-Up / Activation', '🔥', data.warmup, 'warmup');
+            html += renderSection('Training Block', '💪', data.main, 'main');
+            html += renderSection('Cooldown', '🧘', data.cooldown, 'cooldown');
+
+            return html;
+        }
+
+        // Update display
+        function updateDisplay() {
+            document.getElementById('content').innerHTML = renderDay(currentDay);
+
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.classList.toggle('active', parseInt(btn.dataset.day) === currentDay);
+            });
+        }
+
+        // Initialize
+        document.querySelectorAll('.day-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentDay = parseInt(btn.dataset.day);
+                updateDisplay();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        updateDisplay();
+    </script>
+</body>
+</html>
